@@ -24,7 +24,7 @@ jobs:
           env:
             BROWSER: chrome
             ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
-            ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results
+            ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results2
         - name: Upload test results
           uses: actions/upload-artifact@v1
           if: always()
