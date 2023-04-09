@@ -35,7 +35,7 @@ jobs:
 
 
     report:
-      if: alwys()
+      if: always()
       needs: [test]
       runs-on: ubuntu-latest
       steps:
