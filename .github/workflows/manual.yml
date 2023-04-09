@@ -2,7 +2,18 @@ name: Robot Framework
 
 on:
   push:
-    branches: [ master ]
+    branches: 
+     - main
+     - master
+
+
+  pull_request:
+    branches:
+     - main
+     - master
+  schedule:
+     # * is a special character in YAML so you have to quote that triggers the workflow every day at 5:30
+     - cron:  '30 4 * * *'
 jobs:
     test:
         runs-on: ubuntu-latest
@@ -12,8 +23,8 @@ jobs:
           uses: joonvena/robotframework-docker-action@v0.1
           env:
             BROWSER: chrome
-            ROBOT_TESTS_DIR: ${{ github.workspace }}/robot_tests
-            ROBOT_REPORTS_DIR: ${{ github.workspace }}/reports
+            ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
+            ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results
         - name: Upload test results
           uses: actions/upload-artifact@v1
           if: always()
