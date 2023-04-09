@@ -31,14 +31,21 @@ jobs:
           if: always()
           with:
             name: reports
-            path: ${{ github.workspace }}/reports
+            path: reports
+
+
+    report:
+      if: alwys()
+      needs: [test]
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v2
+      - name: Download reports
+        uses: actions/download-artifact@v1
+        with:
+          name: reports
             
-        - name: Download reports
-          uses: actions/download-artifact@v1
-          with:
-            name: reports
-            
-        - name: Send report to commit
-          uses: joonvena/robotframework-reporter-action@v2
-          with:
-            gh_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send report to commit
+        uses: joonvena/robotframework-reporter-action@v2
+        with:
+          gh_access_token: ${{ secrets.GITHUB_TOKEN }}
