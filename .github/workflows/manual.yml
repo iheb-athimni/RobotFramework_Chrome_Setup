@@ -24,7 +24,6 @@ jobs:
           env:
             BROWSER: chrome
             ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
-#            ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results
 
         - name: Upload test results
           uses: actions/upload-artifact@v1
@@ -41,7 +40,7 @@ jobs:
       steps:
       - uses: actions/checkout@v2
       - name: Download reports
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v1
         with:
           name: reports
             
