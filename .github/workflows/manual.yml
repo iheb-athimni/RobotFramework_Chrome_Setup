@@ -25,9 +25,20 @@ jobs:
             BROWSER: chrome
             ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
 #            ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results
+
         - name: Upload test results
           uses: actions/upload-artifact@v1
           if: always()
           with:
             name: reports
             path: ${{ github.workspace }}/reports
+            
+        - name: Download reports
+          uses: actions/download-artifact@v1
+          with:
+            name: reports
+            
+        - name: Send report to commit
+          uses: joonvena/robotframework-reporter-action@v2
+          with:
+            gh_access_token: ${{ secrets.GITHUB_TOKEN }}
