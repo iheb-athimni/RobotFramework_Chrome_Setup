@@ -34,7 +34,7 @@ jobs:
             
             
     report:
-        if: always
+        if: always()
         needs: [test]
         runs-on: ubuntu-latest
         steps:
