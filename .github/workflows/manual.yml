@@ -1,4 +1,4 @@
-name: Robot Framework
+name: Robot Framework test and report demo
 
 on:
   push:
@@ -18,16 +18,26 @@ jobs:
     test:
         runs-on: ubuntu-latest
         steps:
-        - uses: actions/checkout@v2
+        - name: Checkout repository
+          uses: actions/checkout@v3
         - name: Execute tests
           uses: joonvena/robotframework-docker-action@v0.1
           env:
-            BROWSER: chrome
-            ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
-            ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results
+              BROWSER: chrome
+              ROBOT_TESTS_DIR: ${{ github.workspace }}/tests
+
         - name: Upload test results
-          uses: actions/upload-artifact@v1
+          uses: actions/upload-artifact@v3
           if: always()
           with:
             name: reports
-            path: ${{ github.workspace }}/reports
+            path: reports
+        - name: Download reports
+          uses: actions/download-artifact@v3
+          with:
+            name: reports
+            path: reports
+        - name: Send report to commit
+          uses: joonvena/robotframework-reporter-action@v2.1
+          with:
+            gh_access_token: ${{ secrets.GITHUB_TOKEN }}
