@@ -1,4 +1,4 @@
-name: Robot Framework
+name: Robot Framework test and report demo
 
 on:
   push:
@@ -27,8 +27,10 @@ jobs:
           with:
             name: reports
             path: reports
-
+    
     generate_report:
+        if: always()
+        needs: [test] 
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v2
@@ -37,6 +39,6 @@ jobs:
           with:
             name: reports
         - name: Send report to commit
-          uses: joonvena/robotframework-reporter-action@v2
+          uses: joonvena/robotframework-reporter-action@v2.1
           with:
             gh_access_token: ${{ secrets.GITHUB_TOKEN }}
