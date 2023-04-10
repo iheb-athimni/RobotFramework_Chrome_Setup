@@ -20,7 +20,8 @@ jobs:
         steps:
         - uses: actions/checkout@v2
         - name: Execute tests
-          uses: joonvena/robotframework-docker-action@v1.0
+          uses: joonvena/robotframework-docker-action@v0.1
+
         - name: Upload test results
           uses: actions/upload-artifact@v1
           if: always()
