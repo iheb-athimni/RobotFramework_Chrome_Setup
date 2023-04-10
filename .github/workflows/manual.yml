@@ -1,51 +1,4 @@
-name: Robot Framework test and report demo
-
-on:
-  push:
-    branches: 
-     - main
-     - master
-
-
-  pull_request:
-    branches:
-     - main
-     - master
-  schedule:
-     # * is a special character in YAML so you have to quote that triggers the workflow every day at 5:30
-     - cron:  '30 4 * * *'
-jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
-        - name: Execute tests
-          uses: joonvena/robotframework-docker-action@v0.1
-          env:
-              BROWSER: chrome
-              ROBOT_TESTS_DIR: ${{ github.workspace }}/tests
-              ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results
-
-        - name: Upload test results
-          uses: actions/upload-artifact@v3
-          if: always()
-          with:
-            name: reports
-            path: reports
-        - name: Download reports
-          uses: actions/download-artifact@v3
-          with:
-            name: reports
-            path: reports
-        - name: Send report to commit
-          uses: joonvena/robotframework-reporter-action@v2.1
-          with:
-            gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-# name: Run Robot Framework Test Suite
+# name: Robot Framework test and report demo
 
 # on:
 #   push:
@@ -61,54 +14,87 @@ jobs:
 #   schedule:
 #      # * is a special character in YAML so you have to quote that triggers the workflow every day at 5:30
 #      - cron:  '30 4 * * *'
-
 # jobs:
-#   test:
-#     runs-on: ubuntu-latest
+#     test:
+#         runs-on: ubuntu-latest
+#         steps:
+#         - name: Checkout repository
+#           uses: actions/checkout@v3
+#         - mkdir -p ${RBFWK_RESULTS}
+#         - name: Execute tests
+#           uses: joonvena/robotframework-docker-action@v0.1
+#           env:
+#               BROWSER: chrome
+#               ROBOT_TESTS_DIR: ${{ github.workspace }}/tests
+#               ROBOT_REPORTS_DIR: ${{ github.workspace }}/Results
 
-#     steps:
-#       - uses: actions/checkout@v2
+#         - name: Upload test results
+#           uses: actions/upload-artifact@v3
+#           if: always()
+#           with:
+#             name: reports
+#             path: reports
+#         - name: Download reports
+#           uses: actions/download-artifact@v3
+#           with:
+#             name: reports
+#             path: reports
+#         - name: Send report to commit
+#           uses: joonvena/robotframework-reporter-action@v2.1
+#           with:
+#             gh_access_token: ${{ secrets.GITHUB_TOKEN }}
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.8'
 
-#       - name: Install dependencies
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install robotframework
-#           pip install robotframework-seleniumlibrary
+#############################################################################################
+name: Run Robot Framework Test Suite
 
-#       - name: Start ChromeDriver
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get install -y chromium-browser
-#           wget -q https://chromedriver.storage.googleapis.com/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
-#           unzip chromedriver_linux64.zip
-#           chmod +x chromedriver
-#           sudo mv chromedriver /usr/local/bin/
+on:
+  push:
+    branches:
+      - main
 
-#       - name: Print working directory
-#         run: pwd && ls -la
+jobs:
+  test:
+    runs-on: ubuntu-latest
 
-#       - name: Execute tests
-#         uses: joonvena/robotframework-docker-action@v0.1
-#         env:
-#             BROWSER: chrome
-#             ROBOT_TESTS_DIR: ${{ github.workspace }}/tests
+    steps:
+      - uses: actions/checkout@v2
 
-# #       - name: Run tests
-# #         run: |
-# #           robot --variable BROWSER:chrome tests/
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
-#       - name: Generate report
-#         run: |
-#           robot --report report.html --log log.html Results/
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install robotframework
+          pip install robotframework-seleniumlibrary
 
-#       - name: Download report
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: Test Report
-#           path: report.html
+      - name: Start ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+          wget -q https://chromedriver.storage.googleapis.com/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          chmod +x chromedriver
+          sudo mv chromedriver /usr/local/bin/
+
+      - name: Verify test case directory exists
+        run: |
+          ls -la tests/
+
+      - name: Run tests
+        run: |
+          robot tests/
+
+      - name: Generate report
+        run: |
+          robot --report report.html --log log.html tests/
+
+      - name: Download report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Report
+          path: report.html
 
