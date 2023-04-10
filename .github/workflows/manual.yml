@@ -91,9 +91,15 @@ jobs:
       - name: Print working directory
         run: pwd && ls -la
 
-      - name: Run tests
-        run: |
-          robot --variable BROWSER:chrome tests/
+      - name: Execute tests
+        uses: joonvena/robotframework-docker-action@v0.1
+        env:
+            BROWSER: chrome
+            ROBOT_TESTS_DIR: ${{ github.workspace }}/tests
+
+#       - name: Run tests
+#         run: |
+#           robot --variable BROWSER:chrome tests/
 
       - name: Generate report
         run: |
