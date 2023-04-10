@@ -20,22 +20,15 @@ jobs:
         steps:
         - uses: actions/checkout@v2
         - name: Execute tests
-          uses: joonvena/robotframework-docker-action@v0.1
-          env:
-            BROWSER: chrome
-            ROBOT_TESTS_DIR: ${{ github.workspace }}/test
-
+          uses: joonvena/robotframework-docker-action@v1.0
         - name: Upload test results
           uses: actions/upload-artifact@v1
           if: always()
           with:
             name: reports
             path: reports
-            
-            
-    report:
-        if: always()
-        needs: [test]
+
+    generate_report:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v2
@@ -43,7 +36,6 @@ jobs:
           uses: actions/download-artifact@v1
           with:
             name: reports
-            
         - name: Send report to commit
           uses: joonvena/robotframework-reporter-action@v2
           with:
