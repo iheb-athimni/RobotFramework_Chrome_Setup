@@ -103,7 +103,7 @@ jobs:
 
       - name: Generate report
         run: |
-          robot --report report.html --log log.html tests/
+          robot --report report.html --log log.html Results/
 
       - name: Download report
         uses: actions/upload-artifact@v2
