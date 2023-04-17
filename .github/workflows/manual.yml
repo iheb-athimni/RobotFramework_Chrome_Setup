@@ -47,9 +47,9 @@ on:
     branches:
      - main
      - master
-  schedule:
+  # schedule:
      # * is a special character in YAML so you have to quote that triggers the workflow every day at 5:30
-     - cron:  '30 4 * * *'
+     #- cron:  '30 4 * * *'
 
 jobs:
   test:
